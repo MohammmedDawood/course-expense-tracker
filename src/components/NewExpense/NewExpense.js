@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import ExpenseForm from "./ExpenseForm";
 
 import "./NewExpense.css";
 
 function NewExpense({ onExpenseSubmit }) {
+  const [isEditing, setisEditing] = useState(false);
+
   const saveExpenseDataHandler = (enteredExpenseData) => {
     const expenseData = {
       ...enteredExpenseData, // spread operator
@@ -11,11 +13,29 @@ function NewExpense({ onExpenseSubmit }) {
     };
     // console.log(expenseData);
     onExpenseSubmit(expenseData);
+    setisEditing(false);
   };
-
+  const startEditingHandler = () => {
+    // console.log("start editing");
+    setisEditing(true);
+  };
+  const stopEditingHandler = () => {
+    // console.log("stop editing");
+    setisEditing(false);
+  };
   return (
     <div className="new-expense">
-      <ExpenseForm onSaveExpenseData={saveExpenseDataHandler} />
+      {!isEditing && (
+        <button className="new-expense__btn" onClick={startEditingHandler}>
+          Add New Expense
+        </button>
+      )}
+      {isEditing && (
+        <ExpenseForm
+          onSaveExpenseData={saveExpenseDataHandler}
+          onCancel={stopEditingHandler}
+        />
+      )}
     </div>
   );
 }
